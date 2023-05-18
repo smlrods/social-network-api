@@ -8,6 +8,9 @@
     "start": "nodemon --exec babel-node src/index.js",
     "test": "jest --runInBand --detectOpenHandles"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smlrods/odin-book.git"
