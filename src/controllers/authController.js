@@ -60,7 +60,17 @@ const signup = [
   }),
 ];
 
+const logout = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.status(200).send('Log out');
+  });
+};
+
 export default {
   signup,
   login,
+  logout,
 };
