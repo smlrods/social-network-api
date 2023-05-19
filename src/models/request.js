@@ -9,7 +9,7 @@ const RequestSchema = new Schema({
     type: String,
     enum: ['pending', 'accepted', 'refused'],
     required: true,
-    default: 'pedding',
+    default: 'pending',
   },
 });
 
