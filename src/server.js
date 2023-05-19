@@ -18,8 +18,9 @@ function createServer() {
       saveUninitialized: false,
     })
   );
-  app.use(passport.authenticate('session'));
+  app.use(passport.session());
   app.use('/auth', routes.auth);
+  app.use('/users', routes.user);
   // error handler
   app.use(function (err, req, res, next) {
     // set locals, only providing error in development
@@ -28,7 +29,7 @@ function createServer() {
 
     // render the error page
     res.status(err.status || 500);
-    res.send('Error: ' + err.message);
+    res.json({ message: err.message });
   });
   return app;
 }
