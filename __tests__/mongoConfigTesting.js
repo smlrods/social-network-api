@@ -1,6 +1,7 @@
 //// mongoConfigTesting.js
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+const { default: models } = require('../src/models');
 
 let mongo = null;
 
@@ -8,10 +9,7 @@ async function connectDB() {
   const mongo = await MongoMemoryServer.create();
   const mongoUri = mongo.getUri();
 
-  await mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  mongoose.connect(mongoUri);
 
   mongoose.connection.on('error', (e) => {
     if (e.message.code === 'ETIMEDOUT') {
@@ -34,13 +32,4 @@ async function dropDB() {
   }
 }
 
-async function dropCollections() {
-  if (mongo) {
-    const collections = await mongoose.connection.db.collections();
-    for (let collection of collections) {
-      await collection.remove();
-    }
-  }
-}
-
-module.exports = { connectDB, dropDB, dropCollections };
+module.exports = { connectDB, dropDB };
