@@ -19,7 +19,7 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  await dropCollections();
+  await mongoose.connection.db.dropDatabase();
 });
 
 describe('Auth Routes', () => {
