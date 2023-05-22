@@ -1,6 +1,4 @@
 import asyncHandler from 'express-async-handler';
-import passport from 'passport';
-import bcrypt from 'bcryptjs';
 import { body, validationResult, param } from 'express-validator';
 import models from '../models';
 
