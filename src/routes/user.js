@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import controllers from '../controllers';
-import passport from 'passport';
 import checkAuthentication from './middleware/check_authentication';
 
 const router = Router();
