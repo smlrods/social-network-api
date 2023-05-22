@@ -93,9 +93,6 @@ describe('Users routes', () => {
 
       usersResult = usersResult.concat(res.body.users);
 
-      // expect(await User.countDocuments({}).exec()).toEqual(10);
-
-      // expect(res.body.lastDoc).toEqual(res.body.lastDocCollection);
       expect(res.body.hasNextPage).toEqual(false);
       expect(usersResult.length).toEqual(60);
     });
