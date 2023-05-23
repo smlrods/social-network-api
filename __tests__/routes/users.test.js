@@ -6,7 +6,6 @@ import randomUser from './utils/randomUser';
 import randomPost from './utils/randomPost';
 import friendRequest from './utils/friendRequest';
 import models from '../../src/models';
-import expressAsyncHandler from 'express-async-handler';
 import { faker } from '@faker-js/faker';
 
 const { User, Request, Post } = models;
