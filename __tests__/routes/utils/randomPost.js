@@ -2,8 +2,8 @@ import { faker } from '@faker-js/faker';
 
 function createPost(userid) {
   return {
-    _id: faker.database.mongodbObjectId(),
-    __v: 0,
+    // _id: faker.database.mongodbObjectId(),
+    // __v: 0,
     user: userid,
     body: faker.lorem.text(),
   };
