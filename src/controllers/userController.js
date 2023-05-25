@@ -175,7 +175,7 @@ const readFriends = [
       status: 'accepted',
     }).exec();
 
-    res.json(friends);
+    res.json({ friends });
   }),
 ];
 
