@@ -6,7 +6,7 @@ function createRequest(user, friend, status = 'pending') {
   };
 }
 
-function createRequests(user, friends, status) {
+function createSendRequests(user, friends, status) {
   const requests = [];
   friends.forEach((friend) => {
     requests.push(createRequest(user, friend, status));
@@ -14,7 +14,16 @@ function createRequests(user, friends, status) {
   return requests;
 }
 
+function createRequests(user, friends, status) {
+  const requests = [];
+  friends.forEach((friend) => {
+    requests.push(createRequest(friend, user, status));
+  });
+  return requests;
+}
+
 export default {
   createRequest,
+  createSendRequests,
   createRequests,
 };
