@@ -173,13 +173,13 @@ describe('Posts routes', () => {
 
     it('try to delete a post that does not exist', async () => {
       await server
-        .get(`/posts/${faker.database.mongodbObjectId()}`)
+        .delete(`/posts/${faker.database.mongodbObjectId()}`)
         .expect('Content-Type', /json/)
         .expect(404);
     });
 
     it('try to delete a post with an invalid postid', async () => {
-      await server.get('/posts/123').expect('Content-Type', /json/).expect(400);
+      await server.delete('/posts/123').expect('Content-Type', /json/).expect(400);
     });
   });
 
