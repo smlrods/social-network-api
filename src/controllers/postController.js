@@ -7,8 +7,8 @@ const { User, Request, Post, Comment, Like } = models;
 const readAll = [
   body('lastDoc', 'invalid lastDoc format')
     .optional()
-    .isLength({ min: 24, max: 24 })
     .trim()
+    .isLength({ min: 24, max: 24 })
     .escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
