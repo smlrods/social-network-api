@@ -235,14 +235,14 @@ describe('Users routes', () => {
       const someFriendsPending = await User.create(randomUser.createUsers(5));
 
       // create accepted request
-      const someRequestsAccepted = friendRequest.createRequests(
+      const someRequestsAccepted = friendRequest.createSendRequests(
         someUser,
         someFriendsAccepted,
         'accepted'
       );
 
       // create pending request
-      const someRequestsPending = friendRequest.createRequests(
+      const someRequestsPending = friendRequest.createSendRequests(
         someUser,
         someFriendsPending
       );
@@ -255,7 +255,7 @@ describe('Users routes', () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-      expect(res.body.length).toEqual(10);
+      expect(res.body.friends.length).toEqual(10);
     });
 
     it('read friends of a no-exist user', async () => {
