@@ -21,6 +21,7 @@ function createServer() {
   app.use(passport.session());
   app.use('/auth', routes.auth);
   app.use('/users', routes.user);
+  app.use('/posts', routes.post);
   // error handler
   app.use(function (err, req, res, next) {
     // set locals, only providing error in development
