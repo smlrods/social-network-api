@@ -77,6 +77,7 @@ const deleteComment = [
         .status(403)
         .json({ message: 'cannot delete another user comment' });
 
+    await comment.deleteOne();
     res.json({ message: 'comment deleted successfully' });
   }),
 ];
