@@ -8,7 +8,7 @@ const readAll = [
   body('lastDoc', 'invalid lastDoc format')
     .optional()
     .trim()
-    .isLength({ min: 24, max: 24 })
+    .isMongoId()
     .escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
@@ -75,10 +75,7 @@ const createPost = [
 ];
 
 const readOne = [
-  param('postid', 'Invalid post id')
-    .trim()
-    .isLength({ min: 24, max: 24 })
-    .escape(),
+  param('postid', 'Invalid post id').trim().isMongoId().escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -95,10 +92,7 @@ const readOne = [
 ];
 
 const deletePost = [
-  param('postid', 'Invalid post id')
-    .trim()
-    .isLength({ min: 24, max: 24 })
-    .escape(),
+  param('postid', 'Invalid post id').trim().isMongoId().escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -116,10 +110,7 @@ const deletePost = [
 ];
 
 const updatePost = [
-  param('postid', 'Invalid post id')
-    .trim()
-    .isLength({ min: 24, max: 24 })
-    .escape(),
+  param('postid', 'Invalid post id').trim().isMongoId().escape(),
   body('body', 'a post cannot be empty').trim().isLength({ min: 1 }).escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
@@ -149,13 +140,10 @@ const updatePost = [
 ];
 
 const readComments = [
-  param('postid', 'invalid post id')
-    .trim()
-    .isLength({ min: 24, max: 24 })
-    .escape(),
+  param('postid', 'invalid post id').trim().isMongoId().escape(),
   body('lastDoc', 'invalid lastDoc format')
     .optional()
-    .isLength({ min: 24, max: 24 })
+    .isMongoId()
     .trim()
     .escape(),
   asyncHandler(async (req, res, next) => {
@@ -218,10 +206,7 @@ const readComments = [
 ];
 
 const createComment = [
-  param('postid', 'invalid post id')
-    .trim()
-    .isLength({ min: 24, max: 24 })
-    .escape(),
+  param('postid', 'invalid post id').trim().isMongoId().escape(),
   body('body', 'a comment cannot be empty')
     .trim()
     .isLength({ min: 1 })
@@ -252,10 +237,7 @@ const createComment = [
 ];
 
 const readLikes = [
-  param('postid', 'invalid post id')
-    .trim()
-    .isLength({ min: 24, max: 24 })
-    .escape(),
+  param('postid', 'invalid post id').trim().isMongoId().escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -278,10 +260,7 @@ const readLikes = [
 ];
 
 const createLike = [
-  param('postid', 'invalid post id')
-    .trim()
-    .isLength({ min: 24, max: 24 })
-    .escape(),
+  param('postid', 'invalid post id').trim().isMongoId().escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 

@@ -7,7 +7,7 @@ const { User, Request, Post } = models;
 const getAll = [
   body('lastDoc', 'invalid lastDoc format')
     .optional()
-    .isLength({ min: 24, max: 24 })
+    .isMongoId()
     .trim()
     .escape(),
   asyncHandler(async (req, res, next) => {
@@ -66,10 +66,7 @@ const getAll = [
 ];
 
 const getOne = [
-  param('userid', 'invalid user id')
-    .trim()
-    .isLength({ min: 24, max: 24 })
-    .escape(),
+  param('userid', 'invalid user id').trim().isMongoId().escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -86,10 +83,7 @@ const getOne = [
 ];
 
 const sendRequest = [
-  param('userid', 'invalid user id')
-    .trim()
-    .isLength({ min: 24, max: 24 })
-    .escape(),
+  param('userid', 'invalid user id').trim().isMongoId().escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -111,10 +105,7 @@ const sendRequest = [
 ];
 
 const readRequest = [
-  param('userid', 'invalid user id')
-    .trim()
-    .isLength({ min: 24, max: 24 })
-    .escape(),
+  param('userid', 'invalid user id').trim().isMongoId().escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -139,7 +130,7 @@ const readRequest = [
 ];
 
 const readPosts = [
-  param('userid').trim().isLength({ min: 24, max: 24 }).escape(),
+  param('userid').trim().isMongoId().escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -158,7 +149,7 @@ const readPosts = [
 ];
 
 const readFriends = [
-  param('userid').trim().isLength({ min: 24, max: 24 }).escape(),
+  param('userid').trim().isMongoId().escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
