@@ -114,6 +114,8 @@ describe('Comments routes', () => {
         .delete(`/comments/${someComment._id}`)
         .expect('Content-Type', /json/)
         .expect(200);
+
+      expect(await Comment.findById(someComment._id).exec()).toEqual(null);
     });
 
     it('try delete a comment of another user', async () => {
