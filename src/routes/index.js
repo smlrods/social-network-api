@@ -3,6 +3,7 @@ import user from './user';
 import post from './post';
 import request from './request';
 import comment from './comment';
+import like from './like';
 
 export default {
   auth,
@@ -10,4 +11,5 @@ export default {
   post,
   request,
   comment,
+  like,
 };

@@ -3,6 +3,7 @@ import user from './userController';
 import post from './postController';
 import request from './requestController';
 import comment from './commentController';
+import like from './likeController';
 
 export default {
   auth,
@@ -10,4 +11,5 @@ export default {
   post,
   request,
   comment,
+  like,
 };

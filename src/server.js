@@ -24,6 +24,7 @@ function createServer() {
   app.use('/posts', routes.post);
   app.use('/requests', routes.request);
   app.use('/comments', routes.comment);
+  app.use('/likes', routes.like);
   // error handler
   app.use(function (err, req, res, next) {
     // set locals, only providing error in development
