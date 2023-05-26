@@ -23,6 +23,7 @@ function createServer() {
   app.use('/users', routes.user);
   app.use('/posts', routes.post);
   app.use('/requests', routes.request);
+  app.use('/comments', routes.comment);
   // error handler
   app.use(function (err, req, res, next) {
     // set locals, only providing error in development
