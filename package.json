@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
-    "test": "jest --runInBand --detectOpenHandles"
+    "test": "jest --runInBand --detectOpenHandles --watch __tests__/**/*.test.js"
   },
   "jest": {
     "testEnvironment": "node"
