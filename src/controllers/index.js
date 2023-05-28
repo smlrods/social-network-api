@@ -4,6 +4,7 @@ import post from './postController';
 import request from './requestController';
 import comment from './commentController';
 import like from './likeController';
+import friend from './friendController';
 
 export default {
   auth,
@@ -12,4 +13,5 @@ export default {
   request,
   comment,
   like,
+  friend,
 };
