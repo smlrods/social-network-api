@@ -26,7 +26,7 @@ const signup = [
     .trim()
     .isLength({ min: 1 })
     .escape(),
-  body('profile_image').trim().optional().escape(),
+  body('profile_image').trim().isURL().optional(),
   body('first_name', 'First name must be specified')
     .trim()
     .isLength({ min: 1 })
@@ -53,6 +53,8 @@ const signup = [
         first_name: req.body.first_name,
         last_name: req.body.last_name,
       });
+
+      if (req.body.profile_image) user.profile_image = req.body.profile_image;
 
       await user.save();
       res.sendStatus(201);
