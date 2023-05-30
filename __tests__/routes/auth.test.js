@@ -8,10 +8,14 @@ import models from '../../src/models';
 const { User } = models;
 
 const app = createServer();
-const server = request.agent(app);
+let server = request.agent(app);
 
 beforeAll(async () => {
   await connectDB();
+});
+
+beforeEach(async () => {
+  server = request.agent(app);
 });
 
 afterAll(async () => {
@@ -89,6 +93,33 @@ describe('Auth Routes', () => {
           password: user.password,
         })
         .expect(401);
+    });
+  });
+
+  describe('GET /auth/login', () => {
+    it('get logged-in user data', async () => {
+      const user = randomUser.createUserData();
+      await server.post('/auth/signup/').send(user).expect(201);
+
+      await server
+        .post('/auth/login')
+        .send({
+          username: user.username,
+          password: user.password,
+        })
+        .expect(302);
+
+      const res = await server
+        .get('/auth/login')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(res.body.user).toMatchObject({
+        username: user.username,
+        profile_image: user.profile_image,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      });
     });
   });
 });

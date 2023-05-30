@@ -71,8 +71,14 @@ const logout = (req, res, next) => {
   });
 };
 
+const getUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id, '-password').exec();
+  res.json({ user });
+});
+
 export default {
   signup,
   login,
   logout,
+  getUser,
 };
