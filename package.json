@@ -5,7 +5,10 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
+    "clean": "rm -rf ./dist && mkdir ./dist",
+    "build": "npm run clean && babel src -d ./dist",
+    "start": "npm run build && nodemon ./dist/index.js",
+    "server": "node ./dist/index.js",
     "test": "jest --runInBand --detectOpenHandles --watch __tests__/**/*.test.js"
   },
   "jest": {
@@ -23,10 +26,12 @@
   },
   "homepage": "https://github.com/smlrods/odin-book#readme",
   "devDependencies": {
+    "@babel/cli": "^7.21.5",
     "@babel/core": "^7.21.8",
     "@babel/node": "^7.20.7",
     "@babel/preset-env": "^7.21.5",
     "@faker-js/faker": "^8.0.0",
+    "@flydotio/dockerfile": "^0.2.11",
     "eslint": "^8.40.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
