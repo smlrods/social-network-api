@@ -21,6 +21,7 @@ const readAll = [
       const posts = await Post.find({ _id: { $gt: req.body.lastDoc } })
         .limit(20)
         .sort({ _id: 1 })
+        .populate('user', '-password')
         .exec();
 
       const lastDoc = posts[posts.length - 1]._id;
@@ -37,7 +38,11 @@ const readAll = [
       });
     }
 
-    const posts = await Post.find().limit(20).sort({ _id: 1 }).exec();
+    const posts = await Post.find()
+      .limit(20)
+      .sort({ _id: 1 })
+      .populate('user', '-password')
+      .exec();
 
     const lastDoc = posts[posts.length - 1]._id;
     const lastDocCollection = (await Post.findOne().sort({ _id: -1 }).exec())
@@ -83,7 +88,9 @@ const readOne = [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const post = await Post.findById(req.params.postid).exec();
+    const post = await Post.findById(req.params.postid)
+      .populate('user', '-password')
+      .exec();
 
     if (!post) return res.status(404).json({ message: 'post does not exist' });
 
@@ -168,6 +175,7 @@ const readComments = [
       })
         .limit(20)
         .sort({ _id: 1 })
+        .populate('user', '-password')
         .exec();
 
       const lastDoc = comments[comments.length - 1]._id;
@@ -188,6 +196,7 @@ const readComments = [
     const comments = await Comment.find({ post: req.params.postid })
       .limit(20)
       .sort({ _id: 1 })
+      .populate('user', '-password')
       .exec();
 
     const lastDoc = comments[comments.length - 1]._id;
