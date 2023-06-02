@@ -13,42 +13,29 @@ const readAll = [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    if (req.body.lastDoc) {
-      const comments = await Comment.find({
-        user: req.user.id,
-        _id: { $gt: req.body.lastDoc },
-      })
-        .limit(20)
-        .sort({ _id: 1 })
-        .exec();
+    const queryOptions = {
+      user: req.user.id,
+    };
 
-      const lastDoc = comments[comments.length - 1]._id;
+    if (req.body.lastDoc) queryOptions._id = { $gt: req.body.lastDoc };
 
-      const lastDocCollection = (
-        await Comment.findOne({ user: req.user.id }).sort({ _id: -1 }).exec()
-      )._id;
-
-      const hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
-
-      return res.json({
-        lastDoc,
-        comments,
-        hasNextPage,
-      });
-    }
-
-    const comments = await Comment.find({ user: req.user.id })
+    const comments = await Comment.find(queryOptions)
       .limit(20)
-      .sort({ _id: 1 })
+      .sort({ _id: -1 })
       .exec();
 
-    const lastDoc = comments[comments.length - 1]._id;
+    let lastDoc = null;
+    let hasNextPage = false;
 
-    const lastDocCollection = (
-      await Comment.findOne({ user: req.user.id }).sort({ _id: -1 }).exec()
-    )._id;
+    if (comments.length) {
+      lastDoc = comments[comments.length - 1]._id;
 
-    const hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
+      const lastDocCollection = (
+        await Comment.findOne({ user: req.user.id }).sort({ _id: 1 }).exec()
+      )._id;
+
+      hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
+    }
 
     return res.json({
       lastDoc,

@@ -168,45 +168,32 @@ const readComments = [
       });
     }
 
-    if (req.body.lastDoc) {
-      const comments = await Comment.find({
-        post: req.params.postid,
-        _id: { $gt: req.body.lastDoc },
-      })
-        .limit(20)
-        .sort({ _id: 1 })
-        .populate('user', '-password')
-        .exec();
+    const queryOptions = {
+      post: req.params.postid,
+    };
 
-      const lastDoc = comments[comments.length - 1]._id;
+    if (req.body.lastDoc) queryOptions._id = { $gt: req.body.lastDoc };
 
-      const lastDocCollection = (
-        await Comment.findOne().sort({ _id: -1 }).exec()
-      )._id;
-
-      const hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
-
-      return res.json({
-        lastDoc,
-        comments,
-        hasNextPage,
-      });
-    }
-
-    const comments = await Comment.find({ post: req.params.postid })
+    const comments = await Comment.find(queryOptions)
       .limit(20)
-      .sort({ _id: 1 })
-      .populate('user', '-password')
+      .sort({ _id: -1 })
+      .populate('user')
       .exec();
 
-    const lastDoc = comments[comments.length - 1]._id;
+    let lastDoc = null;
+    let hasNextPage = false;
 
-    const lastDocCollection = (await Comment.findOne().sort({ _id: -1 }).exec())
-      ._id;
+    if (comments.length) {
+      lastDoc = comments[comments.length - 1]._id;
 
-    const hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
+      const lastDocCollection = (
+        await Comment.findOne({ user: req.user.id }).sort({ _id: 1 }).exec()
+      )._id;
 
-    res.json({
+      hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
+    }
+
+    return res.json({
       lastDoc,
       comments,
       hasNextPage,
