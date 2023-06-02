@@ -60,6 +60,7 @@ const readAll = [
 
 const createPost = [
   body('body', 'a post cannot be empty').trim().isLength({ min: 1 }).escape(),
+  body('image', 'must be a valid url').trim().isURL().optional(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -67,10 +68,14 @@ const createPost = [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const post = await Post.create({
+    const post = new Post({
       user: req.user.id,
       body: req.body.body,
     });
+
+    if (req.body.image) post.image = req.body.image;
+
+    post.save();
 
     res.json({
       post: post,
