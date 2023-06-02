@@ -63,6 +63,8 @@ const readPosts = [
 
     const friendsIds = requests.map((request) => request.friend);
 
+    friendsIds.push(req.user.id);
+
     const queryOptions = {
       user: { $in: friendsIds },
     };
@@ -72,6 +74,7 @@ const readPosts = [
     const posts = await Post.find(queryOptions)
       .sort({ _id: -1 })
       .limit(20)
+      .populate('user')
       .exec();
 
     let lastDoc = null;
