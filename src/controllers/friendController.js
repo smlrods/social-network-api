@@ -23,6 +23,7 @@ const readAll = [
     const friends = await Request.find(queryOptions)
       .limit(20)
       .sort({ _id: -1 })
+      .populate('friend', '-password')
       .exec();
 
     let lastDoc = null;

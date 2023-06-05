@@ -191,7 +191,9 @@ const readFriends = [
     const friends = await Request.find({
       user: user._id,
       status: 'accepted',
-    }).exec();
+    })
+      .populate('friend', '-password')
+      .exec();
 
     res.json({ friends });
   }),
