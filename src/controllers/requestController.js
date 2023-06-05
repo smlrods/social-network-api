@@ -75,7 +75,7 @@ const updateRequest = [
 
     request.status = req.body.status;
     request.save();
-    if (req.params.status === 'accepted') {
+    if (req.body.status === 'accepted') {
       await Request.create({
         user: request.friend,
         friend: request.user,
