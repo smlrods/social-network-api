@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import { body, validationResult, param } from 'express-validator';
+import { body, validationResult, param, query } from 'express-validator';
 import models from '../models';
 
 const { User, Request, Post } = models;
@@ -131,6 +131,7 @@ const readRequest = [
 
 const readPosts = [
   param('userid').trim().isMongoId().escape(),
+  query('lastDoc').optional().trim().isMongoId().escape(),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
 
@@ -142,9 +143,35 @@ const readPosts = [
 
     if (!user) return res.status(404).json({ message: 'user does not exist' });
 
-    const posts = await Post.find({ user: user._id }).exec();
+    const queryOptions = {
+      user: user._id,
+    };
 
-    res.json(posts);
+    if (req.query.lastDoc) queryOptions._id = { $lt: req.query.lastDoc };
+
+    const posts = await Post.find(queryOptions, '-password')
+      .sort({ _id: -1 })
+      .limit(20)
+      .populate('user', '-password')
+      .exec();
+
+    let lastDoc = null;
+    let hasNextPage = false;
+    if (posts.length) {
+      lastDoc = posts[posts.length - 1]._id;
+
+      const lastDocCollection = (
+        await Post.findOne({ user: user._id }).sort({ _id: 1 }).exec()
+      )._id;
+
+      hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
+    }
+
+    return res.json({
+      lastDoc,
+      posts,
+      hasNextPage,
+    });
   }),
 ];
 
