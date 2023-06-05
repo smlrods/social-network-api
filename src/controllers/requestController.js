@@ -176,6 +176,11 @@ const deleteRequest = [
       return res.status(404).json({ message: 'request does not exist' });
     }
 
+    await Request.findOneAndDelete({
+      user: request.friend._id,
+      friend: request.user._id,
+    }).exec();
+
     res.json({ message: 'request deleted successfully' });
   }),
 ];
