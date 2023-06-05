@@ -1,11 +1,11 @@
 import asyncHandler from 'express-async-handler';
-import { body, validationResult, param } from 'express-validator';
+import { body, validationResult, param, query } from 'express-validator';
 import models from '../models';
 
 const { Request } = models;
 
 const readAll = [
-  body('lastDoc', 'invalid lastDoc format')
+  query('lastDoc', 'invalid lastDoc format')
     .optional()
     .trim()
     .isMongoId()
@@ -17,56 +17,34 @@ const readAll = [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    if (req.body.lastDoc) {
-      const requests = await Request.find({
-        _id: { $gt: req.body.lastDoc },
-        friend: req.user.id,
-        status: 'pending',
-      })
-        .limit(20)
-        .sort({ _id: 1 })
-        .exec();
+    const queryOptions = {
+      friend: req.user.id,
+      status: 'pending',
+    };
 
-      const lastDoc = requests[requests.length - 1]._id;
+    if (req.query.lastDoc) queryOptions._id = { $lt: req.query.lastDoc };
+
+    const requests = await Request.find(queryOptions)
+      .limit(20)
+      .sort({ _id: -1 })
+      .exec();
+
+    let lastDoc = null;
+    let hasNextPage = false;
+    if (requests.length) {
+      lastDoc = requests[requests.length - 1]._id;
 
       const lastDocCollection = (
         await Request.findOne({
           friend: req.user.id,
           status: 'pending',
         })
-          .sort({ _id: -1 })
+          .sort({ _id: 1 })
           .exec()
       )._id;
 
-      const hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
-
-      return res.json({
-        lastDoc,
-        requests,
-        hasNextPage,
-      });
+      hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
     }
-
-    const requests = await Request.find({
-      friend: req.user.id,
-      status: 'pending',
-    })
-      .limit(20)
-      .sort({ _id: 1 })
-      .exec();
-
-    const lastDoc = requests[requests.length - 1]._id;
-
-    const lastDocCollection = (
-      await Request.findOne({
-        friend: req.user.id,
-        status: 'pending',
-      })
-        .sort({ _id: -1 })
-        .exec()
-    )._id;
-
-    const hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
 
     return res.json({
       lastDoc,
