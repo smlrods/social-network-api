@@ -27,6 +27,7 @@ const readAll = [
     const requests = await Request.find(queryOptions)
       .limit(20)
       .sort({ _id: -1 })
+      .populate('user', '-password')
       .exec();
 
     let lastDoc = null;
