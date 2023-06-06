@@ -8,7 +8,13 @@ import './passport';
 
 function createServer() {
   const app = express();
-  app.use(cors());
+  app.use(
+    cors({
+      origin: process.env.ORIGIN,
+      methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD', 'DELETE'],
+      credentials: true,
+    })
+  );
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(
