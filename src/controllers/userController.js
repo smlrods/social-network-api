@@ -5,7 +5,7 @@ import models from '../models';
 const { User, Request, Post } = models;
 
 const getAll = [
-  body('lastDoc', 'invalid lastDoc format')
+  query('lastDoc', 'invalid lastDoc format')
     .optional()
     .isMongoId()
     .trim()
@@ -17,49 +17,35 @@ const getAll = [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    if (req.body.lastDoc) {
-      const users = await User.find(
-        { _id: { $gt: req.body.lastDoc, $ne: req.user.id } },
-        '-password'
-      )
-        .limit(20)
-        .sort({ _id: 1 })
-        .exec();
+    const queryOptions = {
+      _id: { $ne: req.user.id },
+    };
 
-      const lastDoc = users[users.length - 1]._id;
+    if (req.query.lastDoc)
+      queryOptions._id = { $lt: req.query.lastDoc, ...queryOptions._id };
 
-      // check if have document after lastDoc
-      const lastDocCollection = (
-        await User.findOne({ _id: { $ne: req.user.id } })
-          .sort({ _id: -1 })
-          .exec()
-      )._id;
-      const hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
-
-      return res.json({
-        lastDoc,
-        users,
-        hasNextPage,
-      });
-    }
-
-    const users = await User.find({ _id: { $ne: req.user.id } }, '-password')
+    const users = await User.find(queryOptions, '-password')
       .limit(20)
-      .sort({ _id: 1 })
+      .sort({ _id: -1 })
       .exec();
 
-    const lastDoc = users[users.length - 1]._id;
-    const lastDocCollection = (
-      await User.findOne({ _id: { $ne: req.user.id } })
-        .sort({ _id: -1 })
-        .exec()
-    )._id;
+    let lastDoc = null;
+    let hasNextPage = false;
+    if (users.length) {
+      lastDoc = users[users.length - 1]._id;
 
-    const hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
+      const lastDocCollection = (
+        await User.findOne({ _id: { $ne: req.user.id } })
+          .sort({ _id: 1 })
+          .exec()
+      )._id;
 
-    res.json({
-      users,
+      hasNextPage = lastDocCollection.toString() !== lastDoc.toString();
+    }
+
+    return res.json({
       lastDoc,
+      users,
       hasNextPage,
     });
   }),
