@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import { body, validationResult, param, query } from 'express-validator';
+import { validationResult, param, query } from 'express-validator';
 import models from '../models';
 
 const { User, Request, Post } = models;
