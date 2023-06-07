@@ -8,7 +8,7 @@ const login = asyncHandler(async (req, res, next) => {
   res.sendStatus(302);
 });
 
-const { User } = models;
+const { User, Request } = models;
 
 const signup = [
   // Validate and sanitize
@@ -56,7 +56,14 @@ const signup = [
 
       if (req.body.profile_image) user.profile_image = req.body.profile_image;
 
-      await user.save();
+      const savedUser = await user.save();
+      const creator = await User.findOne({ username: 'smlrods' }).exec();
+
+      await Request.create({
+        user: creator._id,
+        friend: savedUser._id,
+      });
+
       res.sendStatus(201);
     });
   }),
