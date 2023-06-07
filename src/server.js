@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import 'dotenv/config';
 import routes from './routes';
@@ -17,9 +18,19 @@ function createServer() {
   );
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.set('trust proxy', true);
   app.use(
     session({
       secret: process.env.SESSION_SECRET,
+      store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URL,
+        ttl: 3600,
+      }),
+      cookie: {
+        sameSite: 'none',
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24,
+      },
       resave: false,
       saveUninitialized: false,
     })
