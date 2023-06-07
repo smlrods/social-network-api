@@ -18,3 +18,5 @@ npm start
 ## Database
 
 - [MongoDB](https://www.mongodb.com/)
+
+![](/assets/images/diagram.drawio.png)
